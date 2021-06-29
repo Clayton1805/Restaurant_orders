@@ -1,34 +1,68 @@
 import csv
 
-def Qual_o_prato_mais_pedido_por_maria(status_reader):
-    pedidos = dict()
-    hamburguer = 0
-    for row in status_reader:
-        if row['name'] == 'maria':
-            pedidos[row['food']] = pedidos.get(row['food'], 0) + 1
-        if row['name'] == 'arnaldo' and row['food'] == 'hamburguer':
-            hamburguer += 1
-    result = ''
-    max = 0
-    for food in pedidos.keys():
-        if pedidos[food] > max:
-            max = pedidos[food]
-            result = food
-    print('1' , result)
-    print('2', hamburguer)
-
-# def Quantas_vezes_arnaldo_pediu_hamburguer(status_reader):
+class TrackOrders:
+    def __init__(self):
+        self.orders = list()
     
-#     for row in status_reader:
-        
-#     print('hamburguer', hamburguer)
+    def __len__(self):
+        return len(self.orders)
+
+    def add_new_order(self, costumer, order, day):
+        self.orders.append({
+            'costumer': costumer,
+            'order': order,
+            'day': day,
+        })
+
+    def get_most_ordered_dish_per_costumer(self, costumer):
+        count_orders_costumer = dict()
+        for order_obj in self.orders:
+            if order_obj['costumer'] == costumer:
+                count_orders_costumer[order_obj['order']] = count_orders_costumer.get(order_obj['order'], 0) + 1
+        return max(count_orders_costumer, key=count_orders_costumer.get)
+
+
+    def get_order_frequency_per_costumer(self, costumer, order):
+        qnt = 0
+        for order_obj in self.orders:
+            if order_obj['costumer'] == costumer and order_obj['order'] == order:
+                qnt += 1
+        return qnt
+
+    def get_never_ordered_per_costumer(self, costumer):
+        order = set()
+        order_costumer = set()
+        for order_obj in self.orders:
+            order.add(order_obj['order'])
+            if order_obj['costumer'] == costumer:
+                order_costumer.add(order_obj['order'])
+        return order.difference(order_costumer)
+
+    def get_days_never_visited_per_costumer(self, costumer):
+        order = set()
+        order_costumer = set()
+        for order_obj in self.orders:
+            order.add(order_obj['day'])
+            if order_obj['costumer'] == costumer:
+                order_costumer.add(order_obj['day'])
+        return order.difference(order_costumer)
 
 def analyze_log(path_to_file):
+    track_orders = TrackOrders()
     with open(path_to_file) as file:
         status_reader = csv.DictReader(file, fieldnames=['name', 'food', 'day_of_week'])
-        # Quantas_vezes_arnaldo_pediu_hamburguer(status_reader)
-        Qual_o_prato_mais_pedido_por_maria(status_reader)
-        # headers, *data = status_reader
-        # for row in status_reader:
-        #     print('status_reader: ', row)
-analyze_log('data/orders_1.csv')
+        for ob in status_reader:
+            name, food, day_of_week = ob.values()
+            track_orders.add_new_order(name, food, day_of_week)
+    with open('data/mkt_campaign.txt', mode='w') as file:
+        file.write(f"{track_orders.get_most_ordered_dish_per_costumer('maria')}\n")
+        file.write(f"{track_orders.get_order_frequency_per_costumer('arnaldo', 'hamburguer')}\n")
+        file.write(f"{track_orders.get_never_ordered_per_costumer('joao')}\n")
+        file.write(f"{track_orders.get_days_never_visited_per_costumer('joao')}\n")
+
+
+    print(track_orders.get_most_ordered_dish_per_costumer('maria'))
+    print(track_orders.get_order_frequency_per_costumer('arnaldo', 'hamburguer'))
+    print(track_orders.get_never_ordered_per_costumer('joao'))
+    print(track_orders.get_days_never_visited_per_costumer('joao'))
+# analyze_log('data/orders_1.csv')
