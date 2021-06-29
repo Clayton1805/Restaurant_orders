@@ -26,8 +26,9 @@ class TrackOrders:
     def get_order_frequency_per_costumer(self, costumer, order):
         qnt = 0
         for order_obj in self.orders:
-            costumer, order = order_obj.values()
-            if costumer == costumer and order == order:
+            c = order_obj['costumer']
+            o = order_obj['order']
+            if costumer == c and order == o:
                 qnt += 1
         return qnt
 
