@@ -1,7 +1,7 @@
 class TrackOrders:
     def __init__(self):
         self.orders = list()
-    
+
     def __len__(self):
         return len(self.orders)
 
@@ -13,17 +13,18 @@ class TrackOrders:
         })
 
     def get_most_ordered_dish_per_costumer(self, costumer):
-        count_orders_costumer = dict()
+        count_order = dict()
         for order_obj in self.orders:
             if order_obj['costumer'] == costumer:
-                count_orders_costumer[order_obj['order']] = count_orders_costumer.get(order_obj['order'], 0) + 1
-        return max(count_orders_costumer, key=count_orders_costumer.get)
-
+                get_key = count_order.get(order_obj['order'], 0)
+                count_order[order_obj['order']] = get_key + 1
+        return max(count_order, key=count_order.get)
 
     def get_order_frequency_per_costumer(self, costumer, order):
         qnt = 0
         for order_obj in self.orders:
-            if order_obj['costumer'] == costumer and order_obj['order'] == order:
+            costumer, order = order_obj.values()
+            if costumer == costumer and order == order:
                 qnt += 1
         return qnt
 
@@ -48,11 +49,13 @@ class TrackOrders:
     def get_busiest_day(self):
         count_day = dict()
         for order_obj in self.orders:
-            count_day[order_obj['day']] = count_day.get(order_obj['day'], 0) + 1
+            day = order_obj.values()
+            count_day[day] = count_day.get(day, 0) + 1
         return max(count_day, key=count_day.get)
 
     def get_least_busy_day(self):
         count_day = dict()
         for order_obj in self.orders:
-            count_day[order_obj['day']] = count_day.get(order_obj['day'], 0) + 1
+            day = order_obj.values()
+            count_day[day] = count_day.get(day, 0) + 1
         return min(count_day, key=count_day.get)
