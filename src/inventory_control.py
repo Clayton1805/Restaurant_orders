@@ -29,7 +29,10 @@ class InventoryControl:
 
     def add_new_order(self, _costumer, order, _day):
         for ingredient in self.ingredients[order]:
-            self.total_ingredients[ingredient] = self.total_ingredients.get(ingredient, 0) + 1
+            self.total_ingredients[ingredient] = self.total_ingredients.get(
+                ingredient,
+                0
+            ) + 1
 
     def get_quantities_to_buy(self):
         return self.total_ingredients
