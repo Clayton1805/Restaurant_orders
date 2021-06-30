@@ -49,13 +49,13 @@ class TrackOrders:
     def get_busiest_day(self):
         count_day = dict()
         for order_obj in self.orders:
-            day = order_obj.values()
+            day = order_obj['day']
             count_day[day] = count_day.get(day, 0) + 1
         return max(count_day, key=count_day.get)
 
     def get_least_busy_day(self):
         count_day = dict()
         for order_obj in self.orders:
-            day = order_obj.values()
+            day = order_obj['day']
             count_day[day] = count_day.get(day, 0) + 1
         return min(count_day, key=count_day.get)
